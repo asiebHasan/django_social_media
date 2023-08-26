@@ -245,7 +245,7 @@ a.like, a.follow { float:right; margin-top:-8px; }
     margin-bottom:20px;
 }
 #people-list .user {
-    width:180px;
+    width:200px;
     float:left;
     overflow:auto;
     padding:10px;
