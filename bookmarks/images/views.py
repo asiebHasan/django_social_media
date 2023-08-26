@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from actions.utils import create_action
 
 from common.decorators import ajax_required, is_ajax
 
@@ -25,6 +26,8 @@ def image_create(request):
             # assign current user to the item
             new_item.user = request.user
             new_item.save()
+            create_action(request.user, 'bookmarked image', new_item)
+
             messages.success(request, 'Image added successfully')
             # redirect to new created item detail view
             return redirect(new_item.get_absolute_url())
@@ -60,6 +63,7 @@ def image_like(request):
         try:
             image = Image.objects.get(id=image_id)
             if action == 'like':
+                create_action(request.user, 'likes', image)
                 image.users_like.add(request.user)
             else:
                 image.users_like.remove(request.user)
@@ -94,4 +98,4 @@ def image_list(request):
                       {'section': 'images', 'images': images})
     return render(request,
                   'images/image/list.html',
-                   {'section': 'images', 'images': images})
+                  {'section': 'images', 'images': images})
